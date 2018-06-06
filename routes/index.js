@@ -1,3 +1,8 @@
+var Connection = require('tedious').Connection;
+var Request = require('tedious').Request;
+var db_config = require('../config/database').config;
+var rows_to_json = require('../util/rows_to_json');
+
 var express = require('express');
 var router = express.Router();
 
@@ -7,16 +12,20 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/current_version', function(req, res, next) {
-  var release_date = new Date();
-  // release_date.setFullYear(2018, 6, 28);
-  release_date.setTime(1527465600000);
-  data = {
-    'build_name': 'Maker Playground v0.2',
-    'version': '0.2',
-    'download_url': 'http://makerplayground.io',
-    'relaese_date': release_date
-  };
-  res.json(data);
+  var connection = new Connection(db_config);
+  connection.on('connect', function(err) {
+    if (err) { return next(err); }
+    request = new Request(
+      "SELECT TOP 1 * FROM mp_version ORDER BY release_date DESC;",
+      function(err, rowCount, rows) {
+        if (err) { return next(err); }
+        json_obj = rows_to_json(rows);
+        res.json(json_obj[0]);
+        connection.close();
+      }
+    );
+    connection.execSql(request);
+  });
 });
 
 module.exports = router;
