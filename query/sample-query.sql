@@ -12,8 +12,8 @@
 
 
 ------------- INSERT DATA ---------------
--- INSERT INTO mp_version (build_name, version, download_url, release_date)
--- VALUES ('Maker Playground v0.3', '0.3', 'http://makerplayground.io', '2018-06-08 00:00:00');
+INSERT INTO mp_version (build_name, version, download_url, release_date)
+VALUES ('Maker Playground v0.3.1', '0.3.1', 'http://makerplayground.io', '2018-12-17 00:00:00');
 
 ------------- Select Data ---------------
 -- SELECT * FROM mp_version;
